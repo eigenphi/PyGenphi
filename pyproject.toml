@@ -1,0 +1,8 @@
+[build-system]
+requires = [
+    "aiohttp",
+    "wheel",
+    "asyncio",
+    "requests"
+]
+build-backend = "setuptools.build_meta"

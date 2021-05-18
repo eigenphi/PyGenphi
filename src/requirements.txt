@@ -1,0 +1,5 @@
+numpy
+aiohttp_jsonrpc
+privex-jsonrpc
+aiohttp
+pandas
