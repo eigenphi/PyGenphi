@@ -1,0 +1,7 @@
+venv
+.data
+.idea
+PyGenphi/__pycache__
+PyGenphi.egg-info
+build
+dist
