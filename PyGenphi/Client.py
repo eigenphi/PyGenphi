@@ -7,7 +7,7 @@ import os
 
 class Client(object):
 
-    domain = 'http://127.0.0.1/'
+    domain = 'http://13.115.250.196/'
 
     def __init__(self):
         pass
