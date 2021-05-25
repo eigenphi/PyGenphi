@@ -1,3 +1,7 @@
+# 项目描述
+
+* 量化交易数据服务 
+
 # PyGenphi
 Standard Datasource of Quant Trading
 
