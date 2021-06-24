@@ -3,14 +3,14 @@ from __future__ import print_function
 from setuptools import setup, find_packages
 import sys
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", "r") as fh:
   long_description = fh.read()
 
 setup(
   name = "PyGenphi",
-  version = "0.1.0",
+  version = "0.1.3",
   author = "David",
-  author_email = "hitdavid@eigenphi.com",
+  author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
   long_description_content_type = "text/markdown",
   long_description = long_description,

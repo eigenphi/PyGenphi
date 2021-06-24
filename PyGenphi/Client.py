@@ -1,13 +1,16 @@
 import datetime
+import uuid
 from datetime import timedelta
 import asyncio
 import aiohttp
 import os
 
+from PyGenphi import Locator, Category
+
 
 class Client(object):
 
-    domain = 'http://13.115.250.196/'
+    domain = 'http://35.74.116.215/'
 
     def __init__(self):
         pass
@@ -15,9 +18,11 @@ class Client(object):
     def set_dev_server(self, server: str):
         self.domain = server
 
-    def make_url(self, locator, symbol, date):
-        # http://127.0.0.1/binance%23main-ETHUSDT-2017-12-23.json
-        url = locator.value + '-' + symbol.upper() + '-' + date + '.jsonl'
+    def make_url(self, locator, symbol, category, date):
+        # http://127.0.0.1/kline/binance_main/ETHUSDT-2017-12-23.jsonl
+        # http://127.0.0.1/crosschain/anyswap/ALL-ALL.jsonl
+
+        url = category.value + '/' + locator.value + '/' + symbol.upper() + '-' + date + '.jsonl'
         return url
 
     async def job(self, session, url):
@@ -46,7 +51,7 @@ class Client(object):
             # 触发await，等待任务完成
             all_results = [r.result() for r in finshed]
             # 获取所有结果
-            print("ALL RESULTS:" + str(all_results))
+            # print("ALL RESULTS:" + str(all_results))
 
     @staticmethod
     def __mkdir__(path):
@@ -71,8 +76,7 @@ class Client(object):
 
         return content
 
-    def get(self, locator, category, symbol: str, start: str, end: str, req_id: str) -> list:
-
+    def __get_from_multi_files__(self, req_id: str, locator, category, symbol: str, start: str, end: str) -> list:
         delta_1d = timedelta(days=1)
         start_datetime = datetime.datetime.strptime(start, "%Y-%m-%d")
         end_datetime = datetime.datetime.strptime(end, "%Y-%m-%d")
@@ -80,15 +84,43 @@ class Client(object):
         start = start_datetime
         i = 1
 
-        url_list = [self.make_url(locator, symbol, start.strftime("%Y-%m-%d"))]
+        url_list = [self.make_url(locator, symbol, category, start.strftime("%Y-%m-%d"))]
         while i <= delta.days:
             start = start + delta_1d
-            url_list.append(self.make_url(locator, symbol, start.strftime("%Y-%m-%d")))
+            url_list.append(self.make_url(locator, symbol, category, start.strftime("%Y-%m-%d")))
             i += 1
 
         loop = asyncio.get_event_loop()
-        Client.__mkdir__('.data')
+
         loop.run_until_complete(self.download(loop, url_list))
         return self.merge_file(url_list, req_id)
 
+    def __get_from_one_file__(self, req_id: str, locator, category, symbol='ALL') -> list:
+        url = self.make_url(locator, symbol, category, 'ALL')
 
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.download(loop, [url]))
+        return self.merge_file(url, req_id)
+
+    def get(self, locator, category, symbol='ALL', start='ALL', end='ALL', request_id=str(uuid.uuid4())) -> list:
+
+        Client.__mkdir__('.data')
+        Client.__mkdir__(os.path.join('.data', category.value))
+        Client.__mkdir__(os.path.join('.data', category.value, locator.value))
+        print("Downloading data files, please wait....")
+        if start == 'ALL' or end == 'ALL':
+            return self.__get_from_one_file__(request_id, locator, category, symbol)
+        else:
+            return self.__get_from_multi_files__(request_id, locator, category, symbol, start, end)
+
+if __name__ == '__main__':
+    pass
+    # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
+    #                     "ETHUSDT", "2020-12-01", "2020-12-10")
+    # for line in data:
+    #     print(line)
+
+    # data = Client().get(Locator.ANYSWAP, Category.CROSSCHAIN_TRANSFER,
+    #                     "ALL", "2020-12-01", "2020-12-02")
+    # for line in data:
+    #     print(line)

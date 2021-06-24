@@ -34,7 +34,7 @@ setup(
   name = "PyGenphi",
   version = "0.0.5",
   author = "David",
-  author_email = "hitdavid@eigenphi.com",
+  author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
   long_description = open("README.md").read(),
   license = "MIT",
