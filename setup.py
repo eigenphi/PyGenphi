@@ -3,12 +3,12 @@ from __future__ import print_function
 from setuptools import setup, find_packages
 import sys
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
   long_description = fh.read()
 
 setup(
   name = "PyGenphi",
-  version = "0.1.3",
+  version = "0.1.10",
   author = "David",
   author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
@@ -18,10 +18,10 @@ setup(
   url = "https://github.com/eigenphi/PyGenphi",
   packages = ['PyGenphi'],
   install_requires = [
-    "aiohttp",
-    "wheel",
-    "asyncio",
-    "requests"
+    "aiohttp==3.7.4",
+    "wheel==0.36.2",
+    "asyncio==3.4.3",
+    "requests==2.24.0"
    ],
   classifiers = [
     "Environment :: Web Environment",

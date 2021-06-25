@@ -1,11 +1,10 @@
 import datetime
+import json
 import uuid
 from datetime import timedelta
 import asyncio
 import aiohttp
 import os
-
-from PyGenphi import Locator, Category
 
 
 class Client(object):
@@ -109,12 +108,14 @@ class Client(object):
         Client.__mkdir__(os.path.join('.data', category.value, locator.value))
         print("Downloading data files, please wait....")
         if start == 'ALL' or end == 'ALL':
-            return self.__get_from_one_file__(request_id, locator, category, symbol)
+            data = self.__get_from_one_file__(request_id, locator, category, symbol)
         else:
-            return self.__get_from_multi_files__(request_id, locator, category, symbol, start, end)
+            data = self.__get_from_multi_files__(request_id, locator, category, symbol, start, end)
+        return [json.loads(item) for item in data]
 
-if __name__ == '__main__':
-    pass
+
+# if __name__ == '__main__':
+#     pass
     # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
     #                     "ETHUSDT", "2020-12-01", "2020-12-10")
     # for line in data:

@@ -82,8 +82,8 @@ python setup.py register -r pypi
 3,build and publish
 
 ``` 
-python setup.py sdist
-python setup.py install
+python3 setup.py sdist
+python3 setup.py install
 twine upload dist/*
 ```
 
