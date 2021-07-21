@@ -8,9 +8,7 @@ from urllib.parse import urlunsplit, urlencode
 from decimal import *
 import os
 
-from Locator import Locator
-from AddressMode import AddressMode
-
+from PyGenphi.enum import *
 
 class Client(object):
 
