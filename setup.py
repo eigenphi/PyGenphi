@@ -22,7 +22,7 @@ setup(
     "wheel==0.36.2",
     "asyncio==3.4.3",
     "requests==2.24.0"
-   ],
+  ],
   classifiers = [
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
@@ -34,5 +34,6 @@ setup(
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
- ],
+  ],
+  exclude_package_data={"": ["pyproject.toml"]}
 )
