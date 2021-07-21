@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
   name = "PyGenphi",
-  version = "0.2.2",
+  version = "0.2.7",
   author = "David",
   author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
@@ -16,7 +16,7 @@ setup(
   long_description = long_description,
   license = "MIT",
   url = "https://github.com/eigenphi/PyGenphi",
-  packages = ['PyGenphi'],
+  packages = ['PyGenphi', 'PyGenphi.enum'],
   install_requires = [
     "aiohttp==3.7.4",
     "wheel==0.36.2",
