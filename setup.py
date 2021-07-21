@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
   name = "PyGenphi",
-  version = "0.2.8",
+  version = "0.2.10",
   author = "David",
   author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
@@ -35,5 +35,4 @@ setup(
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
   ],
-  exclude_package_data={"": ["pyproject.toml"]}
 )

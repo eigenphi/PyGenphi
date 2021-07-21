@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.2.8
+pipenv install PyGenphi==0.2.10
 ```
 
-Note: run command `pipenv install PyGenphi==0.2.8` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.2.8
+Note: run command `pipenv install PyGenphi==0.2.10` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.2.10
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
