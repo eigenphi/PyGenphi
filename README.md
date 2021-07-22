@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.2.12
+pipenv install PyGenphi==0.2.13
 ```
 
-Note: run command `pipenv install PyGenphi==0.2.12` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.2.12
+Note: run command `pipenv install PyGenphi==0.2.13` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.2.13
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -191,6 +191,28 @@ if __name__ == '__main__':
 | `block_number_end`      | `int`         | ×        | `None`            |                                                    |
 | `block_timestamp_start` | `int`         | ×        | `None`            |                                                    |
 | `block_timestamp_end`   | `int`         | ×        | `None`            |                                                    |
+
+### `client.get_transactions_by_block_number`
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client()
+    result = client.get_transactions_by_block_number(block_number=9000000)
+    print(result)
+```
+
+#### params
+
+| param          | type      | required | default       | note        |
+|----------------|-----------|----------|---------------|-------------|
+| `client_id`    | `str`     | ×        | `_`           |             |
+| `locator`      | `Locator` | ×        | `Locator.BSC` | block chain |
+| `block_number` | `int`     | √        |               |             |
 
 ### `client.get_token_transfers_by_address`
 
