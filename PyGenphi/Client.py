@@ -10,6 +10,7 @@ import os
 
 from PyGenphi.enum import *
 
+
 class Client(object):
 
     def __init__(self):
@@ -230,8 +231,22 @@ class Client(object):
         response = asyncio.run(self.__request(url))
         return self.__fix_get_token_transfers_by_address_response(response)
 
+    def get_transactions_by_block_number(self,
+                                         block_number: int,
+                                         client_id: str = "_",
+                                         locator: Locator = Locator.BSC) -> dict:
 
-# if __name__ == '__main__':
+        path = "/v1/dataservice/transactions_by_block_number/"
+        query_params = dict(block_number=block_number,
+                            id=client_id,
+                            locator=locator.value)
+        query = urlencode(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url))
+        return self.__fix_get_transactions_by_address_response(response)
+
+
+#if __name__ == '__main__':
     # pass
     # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
     #                     "ETHUSDT", "2020-12-01", "2020-12-10")
@@ -251,4 +266,7 @@ class Client(object):
     # print(data)
 
     # data = Client().get_token_transfers_by_address(address="0x06dbc4fe79e2541b03fe4731b2579c0b7f46f099", last=True)
+    # print(data)
+
+    # data = Client().get_transactions_by_block_number(9137246)
     # print(data)
