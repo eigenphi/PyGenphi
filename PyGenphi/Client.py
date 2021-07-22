@@ -32,7 +32,7 @@ class Client(object):
         name = url.replace('%23', '-')
         full_name = os.path.join('.data', name)
 
-        url = self.scheme + '://' + self.host + ':' + self.port + '/' + url
+        url = self.scheme + '://' + self.host + ':' + str(self.port) + '/' + url
 
         # 获得名字
         f = await session.get(url)
@@ -188,7 +188,7 @@ class Client(object):
         if block_timestamp_end:
             query_params['blockTimestampEnd'] = block_timestamp_end
         query = urlencode(query_params)
-        url = urlunsplit((self.scheme, self.host + ":" + self.port, path, query, ""))
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         return self.__fix_get_transactions_by_address_response(asyncio.run(self.__request(url)))
 
     def __fix_get_token_transfers_by_address_response(self, response: dict) -> dict:
@@ -226,7 +226,7 @@ class Client(object):
         if block_timestamp_end:
             query_params['blockTimestampEnd'] = block_timestamp_end
         query = urlencode(query_params)
-        url = urlunsplit((self.scheme, self.host + ":" + self.port, path, query, ""))
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         response = asyncio.run(self.__request(url))
         return self.__fix_get_token_transfers_by_address_response(response)
 

@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
   name = "PyGenphi",
-  version = "0.2.11",
+  version = "0.2.12",
   author = "David",
   author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
