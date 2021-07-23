@@ -122,6 +122,12 @@ class Client(object):
             async with session.get(url) as resp:
                 return await resp.json()
 
+    def __fix_transaction_value_type(self, transaction: dict) -> dict:
+        for field in ['transactionValue']:
+            if transaction.get(field):
+                transaction[field] = Decimal(transaction[field])
+        return transaction
+
     def __fix_data_parsed_value_type(self, data_parsed: dict) -> dict:
         for field in ['tokenAmount', 'reserve0', 'reserve1', 'amount0In', 'amount1In', 'amount0Out', 'amount1Out']:
             if data_parsed.get(field):
@@ -134,6 +140,7 @@ class Client(object):
         return d
 
     def __fix_transaction_data(self, d: dict) -> dict:
+        d = self.__fix_transaction_value_type(d)
         if d.get('logs'):
             d['logs'] = list(map(lambda log: self.__fix_event_log_data(log),
                                  d['logs']))
@@ -246,7 +253,7 @@ class Client(object):
         return self.__fix_get_transactions_by_address_response(response)
 
 
-#if __name__ == '__main__':
+# if __name__ == '__main__':
     # pass
     # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
     #                     "ETHUSDT", "2020-12-01", "2020-12-10")
