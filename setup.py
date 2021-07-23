@@ -1,14 +1,28 @@
 # !/usr/bin/env python
 from __future__ import print_function
 from setuptools import setup, find_packages
-import sys
+import codecs
+import os.path
 
 with open("README.md", "r", encoding="utf-8") as fh:
   long_description = fh.read()
 
+def read(rel_path):
+  here = os.path.abspath(os.path.dirname(__file__))
+  with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+    return fp.read()
+
+def get_version(rel_path):
+  print("rel_path: " + rel_path)
+  for line in read(rel_path).splitlines():
+    if line.startswith('__version__'):
+      delim = '"' if '"' in line else "'"
+      return line.split(delim)[1]
+  raise RuntimeError("Unable to find version string.")
+
 setup(
   name = "PyGenphi",
-  version = "0.3.0",
+  version = get_version("PyGenphi/__init__.py"),
   author = "David",
   author_email = "david@eigenphi.com",
   description = "Standard Datasource of Quant Trading",
