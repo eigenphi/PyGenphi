@@ -141,6 +141,108 @@ if __name__ == '__main__':
 
 Note: constructor of class `Client` now support params `scheme` `host` `port`, `Client()` will connect to URL with prefix `http://127.0.0.1:80/`, and `Client(scheme='https', host='192.168.1.1', port=8081)` will connect to URL with prefix `https://192.168.1.1:8081/`
 
+### common response data structure
+
+#### transaction
+
+| field                      | type    | meaning                                                           | note              |
+|----------------------------|---------|-------------------------------------------------------------------|-------------------|
+| `locator`                  | str     | blockchain network                                                |                   |
+| `transactionHash`          | str     | transaction hash                                                  |                   |
+| `transactionIndex`         | int     | transaction index(in block)                                       |                   |
+| `nonce`                    | int     | the number of transactions made by the sender prior to this one   |                   |
+| `transactionReceiptStatus` | bool    | transaction receipt status, `True` for success, `False` for faild |                   |
+| `errCode`                  | str     | error code when transaction faild                                 | NOT implement yet |
+| `blockNumber`              | int     | block number                                                      |                   |
+| `blockHash`                | str     | block hash                                                        |                   |
+| `blockTimestamp`           | int     | Unix time(in second)                                              |                   |
+| `fromAddress`              | str     | from address                                                      |                   |
+| `toAddress`                | str     | to address                                                        |                   |
+| `transactionValue`         | Decimal | transaction value(amount)                                         |                   |
+| `gasUsed`                  | int     | gas used                                                          |                   |
+| `gasPrice`                 | int     | gas price                                                         |                   |
+| `input`                    | str     | input parameters                                                  |                   |
+| `logs`                     | list    | logs of transaction receipt                                       |                   |
+| `logs[n]`                  | dict    | log of transaction receipt                                        | see `event log`   |
+| `labels`                   | list    | labels of current transaction                                     | NOT implement yet |
+| `labels[n]`                | str     | label of current transaction                                      | NOT implement yet |
+
+#### event log
+
+| field              | type | meaning                                                                 | note                   |
+|--------------------|------|-------------------------------------------------------------------------|------------------------|
+| `locator`          | str  | blockchain network                                                      |                        |
+| `transactionHash`  | str  | transaction hash                                                        |                        |
+| `transactionIndex` | int  | transaction index(in block)                                             |                        |
+| `blockNumber`      | int  | block number                                                            |                        |
+| `blockHash`        | str  | block hash                                                              |                        |
+| `blockTimestamp`   | int  | Unix time(in second)                                                    |                        |
+| `logIndex`         | int  | log index(in block)                                                     |                        |
+| `address`          | str  | address that generate current log                                       |                        |
+| `topic0`           | str  | method signature of current log                                         |                        |
+| `topic1`           | str  | indexed param 1 of current log                                          |                        |
+| `topic2`           | str  | indexed param 2 of current log                                          |                        |
+| `topic3`           | str  | indexed param 3 of current log                                          |                        |
+| `data`             | str  | more param data                                                         |                        |
+| `dataParsed`       | dict | topics and data parsed by method signature                              | see `event log parsed` |
+| `category`         | str  | method name if parsed else same to topic0                               |                        |
+| `removed`          | bool | `True`: log valid, `False`: log was removed due to chain reorganization |                        |
+
+##### event log parsed
+
+###### transfer
+
+| field             | type    | meaning               | note |
+|-------------------|---------|-----------------------|------|
+| `category`        | str     | value is `"transfer"` |      |
+| `tokenAddress`    | str     | address of token      |      |
+| `senderAddress`   | str     | address of sender     |      |
+| `receiverAddress` | str     | address of receiver   |      |
+| `tokenAmount`     | Decimal | transfer amount       |      |
+
+###### swap
+
+| field         | type    | meaning                         | note              |
+|---------------|---------|---------------------------------|-------------------|
+| `category`    | str     | value is `"swap"`               |                   |
+| `lpAddress`   | str     | address of liquid pair contract |                   |
+| `lp`          | dict    | liquid pair info                | see `lp` below    |
+| `token0`      | dict    | token0 info                     | see `token` below |
+| `token1`      | dict    | token1 info                     | see `token` below |
+| `fromAddress` | str     | address of sender               |                   |
+| `toAddress`   | str     | address of receiver             |                   |
+| `amount0In`   | Decimal | input amount of token0          |                   |
+| `amount1In`   | Decimal | input amount of token1          |                   |
+| `amount0Out`  | Decimal | output amount of token0         |                   |
+| `amount1Out`  | Decimal | output amount of token1         |                   |
+
+###### sync
+
+| field       | type    | meaning                         | note              |
+|-------------|---------|---------------------------------|-------------------|
+| `category`  | str     | value is `"sync"`               |                   |
+| `lpAddress` | str     | address of liquid pair contract |                   |
+| `lp`        | dict    | liquid pair info                | see `lp` below    |
+| `token0`    | dict    | token0 info                     | see `token` below |
+| `token1`    | dict    | token1 info                     | see `token` below |
+| `reserve0`  | Decimal | reserve of token0               |                   |
+| `reserve1`  | Decimal | reserve of token1               |                   |
+
+##### lp
+
+| field    | type | meaning                          | note |
+|----------|------|----------------------------------|------|
+| `token0` | str  | address of token0 of liquid pair |      |
+| `token1` | str  | address of token1 of liquid pair |      |
+| `symbol` | str  | symbol of liquid pair            |      |
+
+##### token
+
+| field      | type | meaning            | note |
+|------------|------|--------------------|------|
+| `symbol`   | str  | symbol of token0   |      |
+| `decimals` | int  | decimals of token0 |      |
+
 ### `client.get_transaction_by_hash`
 
 #### demo
@@ -162,6 +264,16 @@ if __name__ == '__main__':
 | `client_id` | `str`     | ×        | `_`           |                  |
 | `locator`   | `Locator` | ×        | `Locator.BSC` | block chain      |
 | `tx_hash`   | `str`     | √        |               | transaction hash |
+
+#### result
+
+response body is a JSON string, more details:
+
+| field    | type | meaning                                      | note                                                    |
+|----------|------|----------------------------------------------|---------------------------------------------------------|
+| `domain` | str  | URI of current API                           |                                                         |
+| `id`     | str  | client ID                                    |                                                         |
+| `result` | dict | transaction, `None` if transaction NOT exist | see `transaction` in [common response data structure][] |
 
 ### `client.get_transactions_by_address`
 
@@ -192,6 +304,15 @@ if __name__ == '__main__':
 | `block_timestamp_start` | `int`         | ×        | `None`            |                                                    |
 | `block_timestamp_end`   | `int`         | ×        | `None`            |                                                    |
 
+#### result
+
+| field       | type | meaning            | note                                                    |
+|-------------|------|--------------------|---------------------------------------------------------|
+| `domain`    | str  | URI of current API |                                                         |
+| `id`        | str  | client ID          |                                                         |
+| `result`    | list | transaction list   |                                                         |
+| `result[n]` | dict | transaction        | see `transaction` in [common response data structure][] |
+
 ### `client.get_transactions_by_block_number`
 
 #### demo
@@ -213,6 +334,15 @@ if __name__ == '__main__':
 | `client_id`    | `str`     | ×        | `_`           |             |
 | `locator`      | `Locator` | ×        | `Locator.BSC` | block chain |
 | `block_number` | `int`     | √        |               |             |
+
+#### result
+
+| field       | type | meaning            | note                                                    |
+|-------------|------|--------------------|---------------------------------------------------------|
+| `domain`    | str  | URI of current API |                                                         |
+| `id`        | str  | client ID          |                                                         |
+| `result`    | list | transaction list   |                                                         |
+| `result[n]` | dict | transaction        | see `transaction` in [common response data structure][] |
 
 ### `client.get_token_transfers_by_address`
 
@@ -242,3 +372,12 @@ if __name__ == '__main__':
 | `block_number_end`      | `int`         | ×        | `None`            |                                                    |
 | `block_timestamp_start` | `int`         | ×        | `None`            |                                                    |
 | `block_timestamp_end`   | `int`         | ×        | `None`            |                                                    |
+
+#### result
+
+| field       | type | meaning            | note                                                  |
+|-------------|------|--------------------|-------------------------------------------------------|
+| `domain`    | str  | URI of current API |                                                       |
+| `id`        | str  | client ID          |                                                       |
+| `result`    | list | event log list     |                                                       |
+| `result[n]` | dict | event log          | see `event log` in [common response data structure][] |
