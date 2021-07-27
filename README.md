@@ -192,13 +192,14 @@ Note: constructor of class `Client` now support params `scheme` `host` `port`, `
 
 ###### transfer
 
-| field             | type    | meaning               | note |
-|-------------------|---------|-----------------------|------|
-| `category`        | str     | value is `"transfer"` |      |
-| `tokenAddress`    | str     | address of token      |      |
-| `senderAddress`   | str     | address of sender     |      |
-| `receiverAddress` | str     | address of receiver   |      |
-| `tokenAmount`     | Decimal | transfer amount       |      |
+| field             | type    | meaning               | note              |
+|-------------------|---------|-----------------------|-------------------|
+| `category`        | str     | value is `"transfer"` |                   |
+| `tokenAddress`    | str     | address of token      |                   |
+| `token`           | dict    | token info            | see `token` below |
+| `senderAddress`   | str     | address of sender     |                   |
+| `receiverAddress` | str     | address of receiver   |                   |
+| `tokenAmount`     | Decimal | transfer amount       |                   |
 
 ###### swap
 
