@@ -117,10 +117,17 @@ class Client(object):
             data = self.__get_from_multi_files__(request_id, locator, category, symbol, start, end)
         return [json.loads(item) for item in data]
 
-    async def __request(self, url) -> str:
+    async def __request(self, url,
+                        method: str = "get",
+                        data: str = None) -> str:
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                return await resp.json()
+            if method == "get":
+                async with session.get(url) as resp:
+                    return await resp.json()
+            elif method == "post":
+                async with session.post(url, data=data, headers={"Content-Type": "application/json"}) as resp:
+                    print(resp)
+                    return await resp.json()
 
     def __fix_transaction_value_type(self, transaction: dict) -> dict:
         for field in ['transactionValue']:
@@ -252,6 +259,90 @@ class Client(object):
         response = asyncio.run(self.__request(url))
         return self.__fix_get_transactions_by_address_response(response)
 
+    def __fix_get_tick_response(self, response: dict) -> dict:
+        if response.get('result'):
+            response['result'] = list(map(lambda transaction: self.__fix_data_parsed_value_type(transaction),
+                                          response['result']))
+        return response
+
+    def get_tick(self,
+                 lp_addrs: list = None,
+                 block_number_start: int = None,
+                 block_number_end: int = None,
+                 block_timestamp_start: int = None,
+                 block_timestamp_end: int = None,
+                 client_id: str = "_",
+                 locator: Locator = Locator.BSC,
+                 page: int = 0,
+                 page_size: int = 100):
+        path = "/v1/dataservice/tick/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            page=page,
+                            page_size=page_size)
+        if lp_addrs:
+            query_params['lpAddrs'] = lp_addrs
+        if block_number_start is not None:
+            query_params['blockStart'] = block_number_start
+        if block_number_end is not None:
+            query_params['blockEnd'] = block_number_end
+        if block_timestamp_start is not None:
+            query_params['startTime'] = block_timestamp_start
+        if block_timestamp_end is not None:
+            query_params['endTime'] = block_timestamp_end
+        query = ""
+        data = json.dumps(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url, method="post", data=data))
+        return self.__fix_get_tick_response(response)
+
+    def get_tag_lp(self,
+                   lp_address: str = None,
+                   is_secure: bool = None,
+                   locator: Locator = Locator.BSC,
+                   client_id: str = "_",
+                   page: int = 0,
+                   page_size: int = 100) -> dict:
+        path = "/v1/dataservice/tag/lp/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            page=page,
+                            page_size=page_size)
+        if lp_address:
+            query_params['LPAddress'] = lp_address
+        if is_secure is not None:
+            query_params['isSecure'] = "true" if is_secure else "false"
+        query = urlencode(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url))
+        return response
+
+    def get_tag_lp_pairs(self,
+                         org_id: str = None,
+                         arbitrage_type: str = None,
+                         start_time: int = None,
+                         end_time: int = None,
+                         locator: Locator = Locator.BSC,
+                         client_id: str = "_",
+                         page: int = 0,
+                         page_size: int = 100) -> dict:
+        path = "/v1/dataservice/tag/lp-pairs/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            page=page,
+                            page_size=page_size)
+        if org_id is not None:
+            query_params['orgID'] = org_id
+        if arbitrage_type is not None:
+            query_params['arbitrageType'] = arbitrage_type
+        if start_time is not None:
+            query_params['startTime'] = start_time
+        if end_time is not None:
+            query_params['endTime'] = end_time
+        query = urlencode(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url))
+        return response
 
 # if __name__ == '__main__':
     # pass
@@ -276,4 +367,13 @@ class Client(object):
     # print(data)
 
     # data = Client().get_transactions_by_block_number(9137246)
+    # print(data)
+
+    # data = Client().get_tick()
+    # print(data)
+
+    # data = Client(port=8081).get_tag_lp()
+    # print(data)
+
+    # data = Client(port=8081).get_tag_lp_pairs()
     # print(data)

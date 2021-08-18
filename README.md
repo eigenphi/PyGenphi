@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.3.0
+pipenv install PyGenphi==0.4.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.3.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.3.0
+Note: run command `pipenv install PyGenphi==0.4.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.4.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -382,3 +382,169 @@ if __name__ == '__main__':
 | `id`        | str  | client ID          |                                                       |
 | `result`    | list | event log list     |                                                       |
 | `result[n]` | dict | event log          | see `event log` in [common response data structure][] |
+
+### `client.get_tick`
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client()
+    result = client.get_tick()
+    print(result)
+```
+
+#### params
+
+| param                   | type      | required | default       | note                         |
+|-------------------------|-----------|----------|---------------|------------------------------|
+| `client_id`             | `str`     | ×        | `_`           |                              |
+| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain                  |
+| `lp_addrs`              | `string`  | ×        | `None`        | multi address split with `,` |
+| `block_number_start`    | `int`     | ×        | `None`        |                              |
+| `block_number_end`      | `int`     | ×        | `None`        |                              |
+| `block_timestamp_start` | `int`     | ×        | `None`        |                              |
+| `block_timestamp_end`   | `int`     | ×        | `None`        |                              |
+| `page`                  | `int`     | ×        | `0`           |                              |
+| `page_size`             | `int`     | ×        | `100`         | range: [1, 100]              |
+
+#### result
+
+| field                          | type    | meaning            | note |
+|--------------------------------|---------|--------------------|------|
+| `domain`                       | str     | URI of current API |      |
+| `id`                           | str     | client ID          |      |
+| `result`                       | list    | tick list          |      |
+| `result[n]`                    | dict    | tick               |      |
+| `result[n].blockNumber`        | int     |                    |      |
+| `result[n].logIndex`           | int     |                    |      |
+| `result[n].transactionIndex`   | int     |                    |      |
+| `result[n].transactionHash`    | string  |                    |      |
+| `result[n].blockTimestamp`     | int     |                    |      |
+| `result[n].localTimestamp`     | int     |                    |      |
+| `result[n].lp`                 | dict    |                    |      |
+| `result[n].lp.address`         | string  |                    |      |
+| `result[n].lp.minLiquidity`    | string  |                    |      |
+| `result[n].lp.decimals`        | int     |                    |      |
+| `result[n].lp.factory`         | string  |                    |      |
+| `result[n].lp.name`            | string  |                    |      |
+| `result[n].lp.symbol`          | string  |                    |      |
+| `result[n].lp.totalSupply`     | string  |                    |      |
+| `result[n].token0`             | dict    |                    |      |
+| `result[n].token0.address`     | string  |                    |      |
+| `result[n].token0.symbol`      | string  |                    |      |
+| `result[n].token0.decimals`    | int     |                    |      |
+| `result[n].token0.name`        | string  |                    |      |
+| `result[n].token0.totalSupply` | string  |                    |      |
+| `result[n].token1`             | dict    |                    |      |
+| `result[n].token1.address`     | string  |                    |      |
+| `result[n].token1.symbol`      | string  |                    |      |
+| `result[n].token1.decimals`    | int     |                    |      |
+| `result[n].token1.name`        | string  |                    |      |
+| `result[n].token1.totalSupply` | string  |                    |      |
+| `result[n].reserve0`           | Decimal |                    |      |
+| `result[n].reserve1`           | Decimal |                    |      |
+| `result[n].lpAddress`          | string  |                    |      |
+
+### `client.get_tag_lp`
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client()
+    result = client.get_tag_lp()
+    print(result)
+```
+
+#### params
+
+| param                   | type      | required | default       | note            |
+|-------------------------|-----------|----------|---------------|-----------------|
+| `client_id`             | `str`     | ×        | `_`           |                 |
+| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain     |
+| `lp_address`            | `str`     | ×        |               |                 |
+| `is_secure`             | `bool`    | ×        |               |                 |
+| `page`                  | `int`     | ×        | `0`           |                 |
+| `page_size`             | `int`     | ×        | `100`         | range: [1, 100] |
+
+#### result
+
+| field                          | type   | meaning               | note |
+|--------------------------------|--------|-----------------------|------|
+| `domain`                       | str    | URI of current API    |      |
+| `id`                           | str    | client ID             |      |
+| `result`                       | list   | tag LP info list      |      |
+| `result[n]`                    | dict   | tag LP info           |      |
+| `result[n].chain`              | string | block chain of tag LP |      |
+| `result[n].name`               | string | tag LP name           |      |
+| `result[n].symbol`             | string | tag LP symbol         |      |
+| `result[n].decimals`           | int    |                       |      |
+| `result[n].token0Address`      | string |                       |      |
+| `result[n].token1Address`      | string |                       |      |
+| `result[n].minLiquidity`       | string |                       |      |
+| `result[n].isSecure`           | bool   |                       |      |
+| `result[n].totalSupply`        | string |                       |      |
+| `result[n].token0`             | dict   |                       |      |
+| `result[n].token0.address`     | string |                       |      |
+| `result[n].token0.name`        | string |                       |      |
+| `result[n].token0.symbol`      | string |                       |      |
+| `result[n].token0.decimals`    | int    |                       |      |
+| `result[n].token0.totalSupply` | string |                       |      |
+| `result[n].token1`             | dict   |                       |      |
+| `result[n].token1.address`     | string |                       |      |
+| `result[n].token1.name`        | string |                       |      |
+| `result[n].token1.symbol`      | string |                       |      |
+| `result[n].token1.decimals`    | int    |                       |      |
+| `result[n].token1.totalSupply` | string |                       |      |
+| `result[n].lpAddress`          | string |                       |      |
+
+### `client.get_tag_lp_pairs`
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client()
+    result = client.get_tag_lp_pairs()
+    print(result)
+```
+
+#### params
+
+| param            | type      | required | default       | note                         |
+|------------------|-----------|----------|---------------|------------------------------|
+| `client_id`      | `str`     | ×        | `_`           |                              |
+| `locator`        | `Locator` | ×        | `Locator.BSC` | block chain                  |
+| `org_id`         | `str`     | ×        |               |                              |
+| `arbitrage_type` | `bool`    | ×        |               |                              |
+| `start_time`     | `int`     | ×        |               | LP Pairs used time in millis |
+| `end_time`       | `int`     | ×        |               | LP Pairs used time in millis |
+| `page`           | `int`     | ×        | `0`           |                              |
+| `page_size`      | `int`     | ×        | `100`         | range: [1, 100]              |
+
+#### result
+
+| field                     | type   | meaning               | note |
+|---------------------------|--------|-----------------------|------|
+| `domain`                  | str    | URI of current API    |      |
+| `id`                      | str    | client ID             |      |
+| `result`                  | list   | tag LP Pair info list |      |
+| `result[n]`               | dict   | tag LP Pair info      |      |
+| `result[n].chain`         | string | block chain of tag LP |      |
+| `result[n].orgID`         | string |                       |      |
+| `result[n].facotryCombo`  | string |                       |      |
+| `result[n].decimals`      | int    |                       |      |
+| `result[n].arbitrageType` | string |                       |      |
+| `result[n].createTime`    | int    |                       |      |
+| `result[n].updateTime`    | int    |                       |      |
+| `result[n].lpCombo`       | string |                       |      |
