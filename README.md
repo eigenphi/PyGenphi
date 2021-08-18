@@ -504,6 +504,7 @@ if __name__ == '__main__':
 | `result[n].token1.decimals`    | int    |                       |      |
 | `result[n].token1.totalSupply` | string |                       |      |
 | `result[n].lpAddress`          | string |                       |      |
+| `result[n].factory`            | string |                       |      |
 
 ### `client.get_tag_lp_pairs`
 
