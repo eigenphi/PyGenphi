@@ -287,8 +287,8 @@ class Client(object):
         path = "/v1/dataservice/tick/"
         query_params = dict(id=client_id,
                             chain=locator.value,
-                            page=page,
-                            page_size=page_size)
+                            pageNum=page,
+                            pageSize=page_size)
         if lp_addrs:
             query_params['lpAddrs'] = lp_addrs
         if block_number_start is not None:
@@ -315,8 +315,8 @@ class Client(object):
         path = "/v1/dataservice/tag/lp/"
         query_params = dict(id=client_id,
                             chain=locator.value,
-                            page=page,
-                            page_size=page_size)
+                            pageNum=page,
+                            pageSize=page_size)
         if lp_address:
             query_params['LPAddress'] = lp_address
         if is_secure is not None:
@@ -338,8 +338,8 @@ class Client(object):
         path = "/v1/dataservice/tag/lp-pairs/"
         query_params = dict(id=client_id,
                             chain=locator.value,
-                            page=page,
-                            page_size=page_size)
+                            pageNum=page,
+                            pageSize=page_size)
         if org_id is not None:
             query_params['orgID'] = org_id
         if arbitrage_type is not None:

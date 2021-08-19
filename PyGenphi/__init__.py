@@ -1,4 +1,4 @@
 from PyGenphi.Client import Client
 from PyGenphi.enum import *
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
