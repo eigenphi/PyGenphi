@@ -353,6 +353,46 @@ class Client(object):
         response = asyncio.run(self.__request(url))
         return response
 
+    def get_tag_transaction(self,
+                            from_address: str = None,
+                            to_address: str = None,
+                            arbitrage_type: str = None,
+                            taxed: bool = None,
+                            block_number_start: int = None,
+                            block_number_end: int = None,
+                            block_timestamp_start: int = None,
+                            block_timestamp_end: int = None,
+                            locator: Locator = Locator.BSC,
+                            client_id: str = "_",
+                            page: int = 0,
+                            page_size: int = 100) -> dict:
+        path = "/v1/dataservice/tag/transaction/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            pageNum=page,
+                            pageSize=page_size)
+        if from_address is not None:
+            query_params['fromAddress'] = from_address
+        if to_address is not None:
+            query_params['toAddress'] = to_address
+        if arbitrage_type is not None:
+            query_params['arbitrageType'] = arbitrage_type
+        if taxed is not None:
+            query_params['taxed'] = "true" if taxed else "false"
+        if block_number_start is not None:
+            query_params['blockStart'] = block_number_start
+        if block_number_end is not None:
+            query_params['blockEnd'] = block_number_end
+        if block_timestamp_start is not None:
+            query_params['startTime'] = block_timestamp_start
+        if block_timestamp_end is not None:
+            query_params['endTime'] = block_timestamp_end
+        query = ""
+        data = json.dumps(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url, method="post", data=data))
+        return self.__fix_get_transactions_by_address_response(response)
+
 # if __name__ == '__main__':
     # pass
     # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
@@ -385,4 +425,7 @@ class Client(object):
     # print(data)
 
     # data = Client(port=8081).get_tag_lp_pairs()
+    # print(data)
+
+    # data = Client(port=8081).get_tag_transaction()
     # print(data)

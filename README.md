@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.4.3
+pipenv install PyGenphi==0.5.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.4.3` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.4.3
+Note: run command `pipenv install PyGenphi==0.5.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.5.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -553,3 +553,45 @@ if __name__ == '__main__':
 | `result[n].createTime`    | int    |                       |      |
 | `result[n].updateTime`    | int    |                       |      |
 | `result[n].lpCombo`       | string |                       |      |
+
+### `client.get_tag_transaction`
+
+Note: parameter `api_key` of `Client` is required for this API
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client(api_key="<your-api-key>")
+    result = client.get_tag_transaction()
+    print(result)
+```
+
+#### params
+
+| param                   | type      | required | default       | note            |
+|-------------------------|-----------|----------|---------------|-----------------|
+| `client_id`             | `str`     | ×        | `_`           |                 |
+| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain     |
+| `from_address`          | `str`     | ×        | `None`        |                 |
+| `to_address`            | `str`     | ×        | `None`        |                 |
+| `arbitrage_type`        | `str`     | ×        | `None`        |                 |
+| `taxed`                 | `bool`    | ×        | `None`        |                 |
+| `block_number_start`    | `int`     | ×        | `None`        |                 |
+| `block_number_end`      | `int`     | ×        | `None`        |                 |
+| `block_timestamp_start` | `int`     | ×        | `None`        |                 |
+| `block_timestamp_end`   | `int`     | ×        | `None`        |                 |
+| `page`                  | `int`     | ×        | `0`           |                 |
+| `page_size`             | `int`     | ×        | `100`         | range: [1, 100] |
+
+#### result
+
+| field       | type | meaning            | note                                                    |
+|-------------|------|--------------------|---------------------------------------------------------|
+| `domain`    | str  | URI of current API |                                                         |
+| `id`        | str  | client ID          |                                                         |
+| `result`    | list | transaction list   |                                                         |
+| `result[n]` | dict | transaction        | see `transaction` in [common response data structure][] |
