@@ -451,6 +451,8 @@ if __name__ == '__main__':
 
 ### `client.get_tag_lp`
 
+Note: parameter `api_key` of `Client` is required for this API
+
 #### demo
 
 ```python
@@ -458,7 +460,7 @@ from PyGenphi import *
 
 if __name__ == '__main__':
 
-    client = Client()
+    client = Client(api_key="<your-api-key>")
     result = client.get_tag_lp()
     print(result)
 ```
@@ -508,6 +510,8 @@ if __name__ == '__main__':
 
 ### `client.get_tag_lp_pairs`
 
+Note: parameter `api_key` of `Client` is required for this API
+
 #### demo
 
 ```python
@@ -515,7 +519,7 @@ from PyGenphi import *
 
 if __name__ == '__main__':
 
-    client = Client()
+    client = Client(api_key="<your-api-key>")
     result = client.get_tag_lp_pairs()
     print(result)
 ```
