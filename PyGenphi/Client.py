@@ -16,10 +16,15 @@ class Client(object):
     def __init__(self):
         pass
 
-    def __init__(self, scheme: str = "http", host: str = "127.0.0.1", port: int = 80):
+    def __init__(self,
+                 scheme: str = "http",
+                 host: str = "127.0.0.1",
+                 port: int = 80,
+                 api_key: str = None):
         self.scheme = scheme
         self.host = host
         self.port = port
+        self.api_key = api_key
 
     def make_url(self, locator, symbol, category, date):
         # http://127.0.0.1/kline/binance_main/ETHUSDT-2017-12-23.jsonl
@@ -121,11 +126,15 @@ class Client(object):
                         method: str = "get",
                         data: str = None) -> str:
         async with aiohttp.ClientSession() as session:
+            headers = {}
+            if self.api_key is not None:
+                headers["APIKey"] = self.api_key
             if method == "get":
-                async with session.get(url) as resp:
+                async with session.get(url, headers=headers) as resp:
                     return await resp.json()
             elif method == "post":
-                async with session.post(url, data=data, headers={"Content-Type": "application/json"}) as resp:
+                headers["Content-Type"] = "application/json"
+                async with session.post(url, data=data, headers=headers) as resp:
                     print(resp)
                     return await resp.json()
 
