@@ -328,7 +328,7 @@ class Client(object):
 
     def get_tag_lp_pairs(self,
                          org_id: str = None,
-                         arbitrage_type: str = None,
+                         arbitrage_type: ArbitrageType = None,
                          start_time: int = None,
                          end_time: int = None,
                          locator: Locator = Locator.BSC,
@@ -343,7 +343,7 @@ class Client(object):
         if org_id is not None:
             query_params['orgID'] = org_id
         if arbitrage_type is not None:
-            query_params['arbitrageType'] = arbitrage_type
+            query_params['arbitrageType'] = arbitrage_type.value
         if start_time is not None:
             query_params['startTime'] = start_time
         if end_time is not None:
@@ -356,7 +356,7 @@ class Client(object):
     def get_tag_transaction(self,
                             from_address: str = None,
                             to_address: str = None,
-                            arbitrage_type: str = None,
+                            arbitrage_type: ArbitrageType = None,
                             taxed: bool = None,
                             block_number_start: int = None,
                             block_number_end: int = None,
@@ -376,7 +376,7 @@ class Client(object):
         if to_address is not None:
             query_params['toAddress'] = to_address
         if arbitrage_type is not None:
-            query_params['arbitrageType'] = arbitrage_type
+            query_params['arbitrageType'] = arbitrage_type.value
         if taxed is not None:
             query_params['taxed'] = "true" if taxed else "false"
         if block_number_start is not None:

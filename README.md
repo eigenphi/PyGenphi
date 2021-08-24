@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.5.0
+pipenv install PyGenphi==0.6.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.5.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.5.0
+Note: run command `pipenv install PyGenphi==0.6.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.6.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -140,6 +140,23 @@ if __name__ == '__main__':
 ## dataservice APIs
 
 Note: constructor of class `Client` now support optional parameters `scheme` `host` `port` `api_key`, `Client()` will connect to URL with prefix `http://127.0.0.1:80/`, and `Client(scheme='https', host='192.168.1.1', port=8081, api_key='<your_api_key>')` will connect to URL with prefix `https://192.168.1.1:8081/` with HTTP header `APIKey` for authentication
+
+### common request parameters
+
+#### Enum `Locator`
+
+- `Locator.BSC`
+- `Locator.ANYSWAP`
+- `Locator.BINANCE`
+
+#### Enum `ArbitrageType`
+
+- `ArbitrageType.ALL_ARBITRAGE`
+- `ArbitrageType.TWIN_ARBITRAGE`
+- `ArbitrageType.TRIANGLE_ARBITRAGE`
+- `ArbitrageType.MULTIPLE_ARBITRAGE`
+- `ArbitrageType.NO_ARBITRAGE`
+- `ArbitrageType.UNKNOWN`
 
 ### common response data structure
 
@@ -526,16 +543,16 @@ if __name__ == '__main__':
 
 #### params
 
-| param            | type      | required | default       | note                         |
-|------------------|-----------|----------|---------------|------------------------------|
-| `client_id`      | `str`     | ×        | `_`           |                              |
-| `locator`        | `Locator` | ×        | `Locator.BSC` | block chain                  |
-| `org_id`         | `str`     | ×        |               |                              |
-| `arbitrage_type` | `bool`    | ×        |               |                              |
-| `start_time`     | `int`     | ×        |               | LP Pairs used time in millis |
-| `end_time`       | `int`     | ×        |               | LP Pairs used time in millis |
-| `page`           | `int`     | ×        | `0`           |                              |
-| `page_size`      | `int`     | ×        | `100`         | range: [1, 100]              |
+| param            | type            | required | default       | note                                                      |
+|------------------|-----------------|----------|---------------|-----------------------------------------------------------|
+| `client_id`      | `str`           | ×        | `_`           |                                                           |
+| `locator`        | `Locator`       | ×        | `Locator.BSC` | block chain                                               |
+| `org_id`         | `str`           | ×        |               |                                                           |
+| `arbitrage_type` | `ArbitrageType` | ×        | `None`        | see Enum `ArbitrageType` in [common request parameters][] |
+| `start_time`     | `int`           | ×        |               | LP Pairs used time in millis                              |
+| `end_time`       | `int`           | ×        |               | LP Pairs used time in millis                              |
+| `page`           | `int`           | ×        | `0`           |                                                           |
+| `page_size`      | `int`           | ×        | `100`         | range: [1, 100]                                           |
 
 #### result
 
@@ -572,20 +589,20 @@ if __name__ == '__main__':
 
 #### params
 
-| param                   | type      | required | default       | note            |
-|-------------------------|-----------|----------|---------------|-----------------|
-| `client_id`             | `str`     | ×        | `_`           |                 |
-| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain     |
-| `from_address`          | `str`     | ×        | `None`        |                 |
-| `to_address`            | `str`     | ×        | `None`        |                 |
-| `arbitrage_type`        | `str`     | ×        | `None`        |                 |
-| `taxed`                 | `bool`    | ×        | `None`        |                 |
-| `block_number_start`    | `int`     | ×        | `None`        |                 |
-| `block_number_end`      | `int`     | ×        | `None`        |                 |
-| `block_timestamp_start` | `int`     | ×        | `None`        |                 |
-| `block_timestamp_end`   | `int`     | ×        | `None`        |                 |
-| `page`                  | `int`     | ×        | `0`           |                 |
-| `page_size`             | `int`     | ×        | `100`         | range: [1, 100] |
+| param                   | type            | required | default       | note                                                      |
+|-------------------------|-----------------|----------|---------------|-----------------------------------------------------------|
+| `client_id`             | `str`           | ×        | `_`           |                                                           |
+| `locator`               | `Locator`       | ×        | `Locator.BSC` | block chain                                               |
+| `from_address`          | `str`           | ×        | `None`        |                                                           |
+| `to_address`            | `str`           | ×        | `None`        |                                                           |
+| `arbitrage_type`        | `ArbitrageType` | ×        | `None`        | see Enum `ArbitrageType` in [common request parameters][] |
+| `taxed`                 | `bool`          | ×        | `None`        |                                                           |
+| `block_number_start`    | `int`           | ×        | `None`        |                                                           |
+| `block_number_end`      | `int`           | ×        | `None`        |                                                           |
+| `block_timestamp_start` | `int`           | ×        | `None`        |                                                           |
+| `block_timestamp_end`   | `int`           | ×        | `None`        |                                                           |
+| `page`                  | `int`           | ×        | `0`           |                                                           |
+| `page_size`             | `int`           | ×        | `100`         | range: [1, 100]                                           |
 
 #### result
 
