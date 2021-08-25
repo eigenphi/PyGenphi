@@ -308,6 +308,8 @@ class Client(object):
     def get_tag_lp(self,
                    lp_address: str = None,
                    is_secure: bool = None,
+                   start_time: int = None,
+                   end_time: int = None,
                    locator: Locator = Locator.BSC,
                    client_id: str = "_",
                    page: int = 0,
@@ -321,6 +323,10 @@ class Client(object):
             query_params['LPAddress'] = lp_address
         if is_secure is not None:
             query_params['isSecure'] = "true" if is_secure else "false"
+        if start_time is not None:
+            query_params['startTime'] = start_time
+        if end_time is not None:
+            query_params['endTime'] = end_time
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         response = asyncio.run(self.__request(url))

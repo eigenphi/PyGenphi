@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.6.0
+pipenv install PyGenphi==0.6.1
 ```
 
-Note: run command `pipenv install PyGenphi==0.6.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.6.0
+Note: run command `pipenv install PyGenphi==0.6.1` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.6.1
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -484,14 +484,16 @@ if __name__ == '__main__':
 
 #### params
 
-| param                   | type      | required | default       | note            |
-|-------------------------|-----------|----------|---------------|-----------------|
-| `client_id`             | `str`     | ×        | `_`           |                 |
-| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain     |
-| `lp_address`            | `str`     | ×        |               |                 |
-| `is_secure`             | `bool`    | ×        |               |                 |
-| `page`                  | `int`     | ×        | `0`           |                 |
-| `page_size`             | `int`     | ×        | `100`         | range: [1, 100] |
+| param        | type      | required | default       | note                   |
+|--------------|-----------|----------|---------------|------------------------|
+| `client_id`  | `str`     | ×        | `_`           |                        |
+| `locator`    | `Locator` | ×        | `Locator.BSC` | block chain            |
+| `lp_address` | `str`     | ×        |               |                        |
+| `is_secure`  | `bool`    | ×        |               |                        |
+| `start_time` | `int`     | ×        |               | LP used time in millis |
+| `end_time`   | `int`     | ×        |               | LP used time in millis |
+| `page`       | `int`     | ×        | `0`           |                        |
+| `page_size`  | `int`     | ×        | `100`         | range: [1, 100]        |
 
 #### result
 
