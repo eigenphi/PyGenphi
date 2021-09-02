@@ -305,6 +305,38 @@ class Client(object):
         response = asyncio.run(self.__request(url, method="post", data=data))
         return self.__fix_get_tick_response(response)
 
+    def __fix_get_previoustick(self, response: dict) -> dict:
+        if response.get('result'):
+            response['result'] = self.__fix_data_parsed_value_type(response['result'])
+        return response
+
+    def get_previoustick(self,
+                         lp_addr: str,
+                         block_number_end: int,
+                         log_index: int,
+                         block_number_start: int = None,
+                         block_timestamp_start: int = None,
+                         block_timestamp_end: int = None,
+                         client_id: str = "_",
+                         locator: Locator = Locator.BSC):
+        path = "/v1/dataservice/previoustick/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            lpAddr=lp_addr,
+                            blockEnd=block_number_end,
+                            logIndex=log_index)
+        if block_number_start is not None:
+            query_params['blockStart'] = block_number_start
+        if block_timestamp_start is not None:
+            query_params['startTime'] = block_timestamp_start
+        if block_timestamp_end is not None:
+            query_params['endTime'] = block_timestamp_end
+        query = ""
+        data = json.dumps(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        response = asyncio.run(self.__request(url, method="post", data=data))
+        return self.__fix_get_previoustick(response)
+
     def get_tag_lp(self,
                    lp_address: str = None,
                    is_secure: bool = None,
@@ -425,6 +457,11 @@ class Client(object):
     # print(data)
 
     # data = Client().get_tick()
+    # print(data)
+
+    # data = Client(api_key="<your-api-key>").get_previoustick(lp_addr = "<lp_addr>",
+    #                                                          block_number_end = 7900000,
+    #                                                          log_index = 290)
     # print(data)
 
     # data = Client(port=8081).get_tag_lp()

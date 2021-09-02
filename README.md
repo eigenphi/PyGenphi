@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.6.1
+pipenv install PyGenphi==0.7.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.6.1` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.6.1
+Note: run command `pipenv install PyGenphi==0.7.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.7.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -465,6 +465,69 @@ if __name__ == '__main__':
 | `result[n].reserve0`           | Decimal |                    |      |
 | `result[n].reserve1`           | Decimal |                    |      |
 | `result[n].lpAddress`          | string  |                    |      |
+
+### `client.get_previoustick`
+
+Note: parameter `api_key` of `Client` is required for this API
+
+#### demo
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client(api_key="<your-api-key>")
+    result = client.get_previoustick(lp_addr="<lp_addr>", block_number_end=7900000, log_index=297)
+    print(result)
+```
+
+#### params
+
+| param                   | type      | required | default       | note        |
+|-------------------------|-----------|----------|---------------|-------------|
+| `client_id`             | `str`     | ×        | `_`           |             |
+| `locator`               | `Locator` | ×        | `Locator.BSC` | block chain |
+| `lp_addr`               | `str`     | √        |               |             |
+| `block_number_end`      | `int`     | √        |               |             |
+| `block_number_start`    | `int`     | ×        | `None`        |             |
+| `log_index`             | `int`     | √        |               |             |
+| `block_timestamp_start` | `int`     | ×        | `None`        |             |
+| `block_timestamp_end`   | `int`     | ×        | `None`        |             |
+
+#### result
+
+| field                     | type    | meaning            | note |
+|---------------------------|---------|--------------------|------|
+| `domain`                  | str     | URI of current API |      |
+| `id`                      | str     | client ID          |      |
+| `result`                  | dict    | tick               |      |
+| `result.blockNumber`      | int     |                    |      |
+| `result.logIndex`         | int     |                    |      |
+| `result.transactionIndex` | int     |                    |      |
+| `result.transactionHash`  | str     |                    |      |
+| `result.blockTimestamp`   | int     |                    |      |
+| `result.taggedMillis`     | int     |                    |      |
+| `result.lp`               | dict    |                    |      |
+| `result.lp.address`       | str     |                    |      |
+| `result.lp.minLiquidity`  | str     |                    |      |
+| `result.lp.decimals`      | int     |                    |      |
+| `result.lp.factory`       | str     |                    |      |
+| `result.lp.name`          | str     |                    |      |
+| `result.lp.symbol`        | str     |                    |      |
+| `result.token0`           | dict    |                    |      |
+| `result.token0.address`   | str     |                    |      |
+| `result.token0.symbol`    | str     |                    |      |
+| `result.token0.decimals`  | int     |                    |      |
+| `result.token0.name`      | str     |                    |      |
+| `result.token1`           | dict    |                    |      |
+| `result.token1.address`   | str     |                    |      |
+| `result.token1.symbol`    | str     |                    |      |
+| `result.token1.decimals`  | int     |                    |      |
+| `result.token1.name`      | str     |                    |      |
+| `result.reserve0`         | Decimal |                    |      |
+| `result.reserve1`         | Decimal |                    |      |
+| `result.lpAddress`        | str     |                    |      |
 
 ### `client.get_tag_lp`
 
