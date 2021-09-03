@@ -5,7 +5,6 @@ from datetime import timedelta
 import asyncio
 import aiohttp
 from urllib.parse import urlunsplit, urlencode
-from decimal import *
 import os
 
 from PyGenphi.enum import *
@@ -138,35 +137,6 @@ class Client(object):
                     print(resp)
                     return await resp.json()
 
-    def __fix_transaction_value_type(self, transaction: dict) -> dict:
-        for field in ['transactionValue']:
-            if transaction.get(field):
-                transaction[field] = Decimal(transaction[field])
-        return transaction
-
-    def __fix_data_parsed_value_type(self, data_parsed: dict) -> dict:
-        for field in ['tokenAmount', 'reserve0', 'reserve1', 'amount0In', 'amount1In', 'amount0Out', 'amount1Out']:
-            if data_parsed.get(field):
-                data_parsed[field] = Decimal(data_parsed[field])
-        return data_parsed
-
-    def __fix_event_log_data(self, d: dict) -> dict:
-        if d.get('dataParsed'):
-            d['dataParsed'] = self.__fix_data_parsed_value_type(d['dataParsed'])
-        return d
-
-    def __fix_transaction_data(self, d: dict) -> dict:
-        d = self.__fix_transaction_value_type(d)
-        if d.get('logs'):
-            d['logs'] = list(map(lambda log: self.__fix_event_log_data(log),
-                                 d['logs']))
-        return d
-
-    def __fix_get_transaction_by_hash_response(self, response: dict) -> dict:
-        if response.get('result'):
-            response['result'] = self.__fix_transaction_data(response['result'])
-        return response
-
     def get_transaction_by_hash(self,
                                 tx_hash: str,
                                 client_id="_",
@@ -175,13 +145,7 @@ class Client(object):
         query = urlencode(dict(id=client_id, locator=locator.value, tx_hash=tx_hash))
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         print(f"url: {url}")
-        return self.__fix_get_transaction_by_hash_response(asyncio.run(self.__request(url)))
-
-    def __fix_get_transactions_by_address_response(self, response: dict) -> dict:
-        if response.get('result'):
-            response['result'] = list(map(lambda transaction: self.__fix_transaction_data(transaction),
-                                          response['result']))
-        return response
+        return asyncio.run(self.__request(url))
 
     def get_transactions_by_address(self,
                                     address: str,
@@ -213,13 +177,7 @@ class Client(object):
             query_params['blockTimestampEnd'] = block_timestamp_end
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        return self.__fix_get_transactions_by_address_response(asyncio.run(self.__request(url)))
-
-    def __fix_get_token_transfers_by_address_response(self, response: dict) -> dict:
-        if response.get('result'):
-            response['result'] = list(map(lambda transaction: self.__fix_event_log_data(transaction),
-                                          response['result']))
-        return response
+        return asyncio.run(self.__request(url))
 
     def get_token_transfers_by_address(self,
                                        address: str,
@@ -251,8 +209,7 @@ class Client(object):
             query_params['blockTimestampEnd'] = block_timestamp_end
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url))
-        return self.__fix_get_token_transfers_by_address_response(response)
+        return asyncio.run(self.__request(url))
 
     def get_transactions_by_block_number(self,
                                          block_number: int,
@@ -265,14 +222,7 @@ class Client(object):
                             locator=locator.value)
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url))
-        return self.__fix_get_transactions_by_address_response(response)
-
-    def __fix_get_tick_response(self, response: dict) -> dict:
-        if response.get('result'):
-            response['result'] = list(map(lambda transaction: self.__fix_data_parsed_value_type(transaction),
-                                          response['result']))
-        return response
+        return asyncio.run(self.__request(url))
 
     def get_tick(self,
                  lp_addrs: list = None,
@@ -302,13 +252,7 @@ class Client(object):
         query = ""
         data = json.dumps(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url, method="post", data=data))
-        return self.__fix_get_tick_response(response)
-
-    def __fix_get_previoustick(self, response: dict) -> dict:
-        if response.get('result'):
-            response['result'] = self.__fix_data_parsed_value_type(response['result'])
-        return response
+        return asyncio.run(self.__request(url, method="post", data=data))
 
     def get_previoustick(self,
                          lp_addr: str,
@@ -334,8 +278,7 @@ class Client(object):
         query = ""
         data = json.dumps(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url, method="post", data=data))
-        return self.__fix_get_previoustick(response)
+        return asyncio.run(self.__request(url, method="post", data=data))
 
     def get_tag_lp(self,
                    lp_address: str = None,
@@ -361,8 +304,7 @@ class Client(object):
             query_params['endTime'] = end_time
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url))
-        return response
+        return asyncio.run(self.__request(url))
 
     def get_tag_lp_pairs(self,
                          org_id: str = None,
@@ -388,8 +330,7 @@ class Client(object):
             query_params['endTime'] = end_time
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url))
-        return response
+        return asyncio.run(self.__request(url))
 
     def get_tag_transaction(self,
                             from_address: str = None,
@@ -428,47 +369,4 @@ class Client(object):
         query = ""
         data = json.dumps(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
-        response = asyncio.run(self.__request(url, method="post", data=data))
-        return self.__fix_get_transactions_by_address_response(response)
-
-# if __name__ == '__main__':
-    # pass
-    # data = Client().get(Locator.BINANCE, Category.KLINE_1Min,
-    #                     "ETHUSDT", "2020-12-01", "2020-12-10")
-    # for line in data:
-    #     print(line)
-
-    # data = Client().get(Locator.ANYSWAP, Category.CROSSCHAIN_TRANSFER,
-    #                     "ALL", "2020-12-01", "2020-12-02")
-    # for line in data:
-    #     print(line)
-
-    # data = Client().get_transaction_by_hash(
-    #     tx_hash="0x97896e5b40b4ef51ec0c328a47388334e5818d2bd004bbd751da35d6b22a410e")
-    # print(data)
-
-    # data = Client().get_transactions_by_address(address="0x6d4851eaf458d0fdae1599b1241915f878c0f539")
-    # print(data)
-
-    # data = Client().get_token_transfers_by_address(address="0x06dbc4fe79e2541b03fe4731b2579c0b7f46f099", last=True)
-    # print(data)
-
-    # data = Client().get_transactions_by_block_number(9137246)
-    # print(data)
-
-    # data = Client().get_tick()
-    # print(data)
-
-    # data = Client(api_key="<your-api-key>").get_previoustick(lp_addr = "<lp_addr>",
-    #                                                          block_number_end = 7900000,
-    #                                                          log_index = 290)
-    # print(data)
-
-    # data = Client(port=8081).get_tag_lp()
-    # print(data)
-
-    # data = Client(port=8081).get_tag_lp_pairs()
-    # print(data)
-
-    # data = Client(port=8081).get_tag_transaction()
-    # print(data)
+        return asyncio.run(self.__request(url, method="post", data=data))

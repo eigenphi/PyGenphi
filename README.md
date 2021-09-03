@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.7.1
+pipenv install PyGenphi==0.8.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.7.1` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.7.1
+Note: run command `pipenv install PyGenphi==0.8.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.8.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -141,6 +141,8 @@ if __name__ == '__main__':
 
 Note: constructor of class `Client` now support optional parameters `scheme` `host` `port` `api_key`, `Client()` will connect to URL with prefix `http://127.0.0.1:80/`, and `Client(scheme='https', host='192.168.1.1', port=8081, api_key='<your_api_key>')` will connect to URL with prefix `https://192.168.1.1:8081/` with HTTP header `APIKey` for authentication
 
+IMPORTANT NOTE: for PyGenphi 0.8.0+, value of all **amount** related field no long parsed from type `str` to `Decimal` by PyGenphi, please do this with `Decimal(<amount>)` if needed(import library `decimal` with code `from decimal import *`).
+
 ### common request parameters
 
 #### Enum `Locator`
@@ -162,27 +164,27 @@ Note: constructor of class `Client` now support optional parameters `scheme` `ho
 
 #### transaction
 
-| field                      | type    | meaning                                                           | note              |
-|----------------------------|---------|-------------------------------------------------------------------|-------------------|
-| `locator`                  | str     | blockchain network                                                |                   |
-| `transactionHash`          | str     | transaction hash                                                  |                   |
-| `transactionIndex`         | int     | transaction index(in block)                                       |                   |
-| `nonce`                    | int     | the number of transactions made by the sender prior to this one   |                   |
-| `transactionReceiptStatus` | bool    | transaction receipt status, `True` for success, `False` for faild |                   |
-| `errCode`                  | str     | error code when transaction faild                                 | NOT implement yet |
-| `blockNumber`              | int     | block number                                                      |                   |
-| `blockHash`                | str     | block hash                                                        |                   |
-| `blockTimestamp`           | int     | Unix time(in second)                                              |                   |
-| `fromAddress`              | str     | from address                                                      |                   |
-| `toAddress`                | str     | to address                                                        |                   |
-| `transactionValue`         | Decimal | transaction value(amount)                                         |                   |
-| `gasUsed`                  | int     | gas used                                                          |                   |
-| `gasPrice`                 | int     | gas price                                                         |                   |
-| `input`                    | str     | input parameters                                                  |                   |
-| `logs`                     | list    | logs of transaction receipt                                       |                   |
-| `logs[n]`                  | dict    | log of transaction receipt                                        | see `event log`   |
-| `labels`                   | list    | labels of current transaction                                     | NOT implement yet |
-| `labels[n]`                | str     | label of current transaction                                      | NOT implement yet |
+| field                      | type | meaning                                                           | note              |
+|----------------------------|------|-------------------------------------------------------------------|-------------------|
+| `locator`                  | str  | blockchain network                                                |                   |
+| `transactionHash`          | str  | transaction hash                                                  |                   |
+| `transactionIndex`         | int  | transaction index(in block)                                       |                   |
+| `nonce`                    | int  | the number of transactions made by the sender prior to this one   |                   |
+| `transactionReceiptStatus` | bool | transaction receipt status, `True` for success, `False` for faild |                   |
+| `errCode`                  | str  | error code when transaction faild                                 | NOT implement yet |
+| `blockNumber`              | int  | block number                                                      |                   |
+| `blockHash`                | str  | block hash                                                        |                   |
+| `blockTimestamp`           | int  | Unix time(in second)                                              |                   |
+| `fromAddress`              | str  | from address                                                      |                   |
+| `toAddress`                | str  | to address                                                        |                   |
+| `transactionValue`         | str  | transaction value(amount)                                         |                   |
+| `gasUsed`                  | int  | gas used                                                          |                   |
+| `gasPrice`                 | int  | gas price                                                         |                   |
+| `input`                    | str  | input parameters                                                  |                   |
+| `logs`                     | list | logs of transaction receipt                                       |                   |
+| `logs[n]`                  | dict | log of transaction receipt                                        | see `event log`   |
+| `labels`                   | list | labels of current transaction                                     | NOT implement yet |
+| `labels[n]`                | str  | label of current transaction                                      | NOT implement yet |
 
 #### event log
 
@@ -209,42 +211,42 @@ Note: constructor of class `Client` now support optional parameters `scheme` `ho
 
 ###### transfer
 
-| field             | type    | meaning               | note              |
-|-------------------|---------|-----------------------|-------------------|
-| `category`        | str     | value is `"transfer"` |                   |
-| `tokenAddress`    | str     | address of token      |                   |
-| `token`           | dict    | token info            | see `token` below |
-| `senderAddress`   | str     | address of sender     |                   |
-| `receiverAddress` | str     | address of receiver   |                   |
-| `tokenAmount`     | Decimal | transfer amount       |                   |
+| field             | type | meaning               | note              |
+|-------------------|------|-----------------------|-------------------|
+| `category`        | str  | value is `"transfer"` |                   |
+| `tokenAddress`    | str  | address of token      |                   |
+| `token`           | dict | token info            | see `token` below |
+| `senderAddress`   | str  | address of sender     |                   |
+| `receiverAddress` | str  | address of receiver   |                   |
+| `tokenAmount`     | str  | transfer amount       |                   |
 
 ###### swap
 
-| field         | type    | meaning                         | note              |
-|---------------|---------|---------------------------------|-------------------|
-| `category`    | str     | value is `"swap"`               |                   |
-| `lpAddress`   | str     | address of liquid pair contract |                   |
-| `lp`          | dict    | liquid pair info                | see `lp` below    |
-| `token0`      | dict    | token0 info                     | see `token` below |
-| `token1`      | dict    | token1 info                     | see `token` below |
-| `fromAddress` | str     | address of sender               |                   |
-| `toAddress`   | str     | address of receiver             |                   |
-| `amount0In`   | Decimal | input amount of token0          |                   |
-| `amount1In`   | Decimal | input amount of token1          |                   |
-| `amount0Out`  | Decimal | output amount of token0         |                   |
-| `amount1Out`  | Decimal | output amount of token1         |                   |
+| field         | type | meaning                         | note              |
+|---------------|------|---------------------------------|-------------------|
+| `category`    | str  | value is `"swap"`               |                   |
+| `lpAddress`   | str  | address of liquid pair contract |                   |
+| `lp`          | dict | liquid pair info                | see `lp` below    |
+| `token0`      | dict | token0 info                     | see `token` below |
+| `token1`      | dict | token1 info                     | see `token` below |
+| `fromAddress` | str  | address of sender               |                   |
+| `toAddress`   | str  | address of receiver             |                   |
+| `amount0In`   | str  | input amount of token0          |                   |
+| `amount1In`   | str  | input amount of token1          |                   |
+| `amount0Out`  | str  | output amount of token0         |                   |
+| `amount1Out`  | str  | output amount of token1         |                   |
 
 ###### sync
 
-| field       | type    | meaning                         | note              |
-|-------------|---------|---------------------------------|-------------------|
-| `category`  | str     | value is `"sync"`               |                   |
-| `lpAddress` | str     | address of liquid pair contract |                   |
-| `lp`        | dict    | liquid pair info                | see `lp` below    |
-| `token0`    | dict    | token0 info                     | see `token` below |
-| `token1`    | dict    | token1 info                     | see `token` below |
-| `reserve0`  | Decimal | reserve of token0               |                   |
-| `reserve1`  | Decimal | reserve of token1               |                   |
+| field       | type | meaning                         | note              |
+|-------------|------|---------------------------------|-------------------|
+| `category`  | str  | value is `"sync"`               |                   |
+| `lpAddress` | str  | address of liquid pair contract |                   |
+| `lp`        | dict | liquid pair info                | see `lp` below    |
+| `token0`    | dict | token0 info                     | see `token` below |
+| `token1`    | dict | token1 info                     | see `token` below |
+| `reserve0`  | str  | reserve of token0               |                   |
+| `reserve1`  | str  | reserve of token1               |                   |
 
 ##### lp
 
@@ -430,41 +432,41 @@ if __name__ == '__main__':
 
 #### result
 
-| field                          | type    | meaning            | note |
-|--------------------------------|---------|--------------------|------|
-| `domain`                       | str     | URI of current API |      |
-| `id`                           | str     | client ID          |      |
-| `result`                       | list    | tick list          |      |
-| `result[n]`                    | dict    | tick               |      |
-| `result[n].blockNumber`        | int     |                    |      |
-| `result[n].logIndex`           | int     |                    |      |
-| `result[n].transactionIndex`   | int     |                    |      |
-| `result[n].transactionHash`    | str     |                    |      |
-| `result[n].blockTimestamp`     | int     |                    |      |
-| `result[n].localTimestamp`     | int     |                    |      |
-| `result[n].lp`                 | dict    |                    |      |
-| `result[n].lp.address`         | str     |                    |      |
-| `result[n].lp.minLiquidity`    | str     |                    |      |
-| `result[n].lp.decimals`        | int     |                    |      |
-| `result[n].lp.factory`         | str     |                    |      |
-| `result[n].lp.name`            | str     |                    |      |
-| `result[n].lp.symbol`          | str     |                    |      |
-| `result[n].lp.totalSupply`     | str     |                    |      |
-| `result[n].token0`             | dict    |                    |      |
-| `result[n].token0.address`     | str     |                    |      |
-| `result[n].token0.symbol`      | str     |                    |      |
-| `result[n].token0.decimals`    | int     |                    |      |
-| `result[n].token0.name`        | str     |                    |      |
-| `result[n].token0.totalSupply` | str     |                    |      |
-| `result[n].token1`             | dict    |                    |      |
-| `result[n].token1.address`     | str     |                    |      |
-| `result[n].token1.symbol`      | str     |                    |      |
-| `result[n].token1.decimals`    | int     |                    |      |
-| `result[n].token1.name`        | str     |                    |      |
-| `result[n].token1.totalSupply` | str     |                    |      |
-| `result[n].reserve0`           | Decimal |                    |      |
-| `result[n].reserve1`           | Decimal |                    |      |
-| `result[n].lpAddress`          | str     |                    |      |
+| field                          | type | meaning            | note |
+|--------------------------------|------|--------------------|------|
+| `domain`                       | str  | URI of current API |      |
+| `id`                           | str  | client ID          |      |
+| `result`                       | list | tick list          |      |
+| `result[n]`                    | dict | tick               |      |
+| `result[n].blockNumber`        | int  |                    |      |
+| `result[n].logIndex`           | int  |                    |      |
+| `result[n].transactionIndex`   | int  |                    |      |
+| `result[n].transactionHash`    | str  |                    |      |
+| `result[n].blockTimestamp`     | int  |                    |      |
+| `result[n].localTimestamp`     | int  |                    |      |
+| `result[n].lp`                 | dict |                    |      |
+| `result[n].lp.address`         | str  |                    |      |
+| `result[n].lp.minLiquidity`    | str  |                    |      |
+| `result[n].lp.decimals`        | int  |                    |      |
+| `result[n].lp.factory`         | str  |                    |      |
+| `result[n].lp.name`            | str  |                    |      |
+| `result[n].lp.symbol`          | str  |                    |      |
+| `result[n].lp.totalSupply`     | str  |                    |      |
+| `result[n].token0`             | dict |                    |      |
+| `result[n].token0.address`     | str  |                    |      |
+| `result[n].token0.symbol`      | str  |                    |      |
+| `result[n].token0.decimals`    | int  |                    |      |
+| `result[n].token0.name`        | str  |                    |      |
+| `result[n].token0.totalSupply` | str  |                    |      |
+| `result[n].token1`             | dict |                    |      |
+| `result[n].token1.address`     | str  |                    |      |
+| `result[n].token1.symbol`      | str  |                    |      |
+| `result[n].token1.decimals`    | int  |                    |      |
+| `result[n].token1.name`        | str  |                    |      |
+| `result[n].token1.totalSupply` | str  |                    |      |
+| `result[n].reserve0`           | str  |                    |      |
+| `result[n].reserve1`           | str  |                    |      |
+| `result[n].lpAddress`          | str  |                    |      |
 
 ### `client.get_previoustick`
 
@@ -497,37 +499,37 @@ if __name__ == '__main__':
 
 #### result
 
-| field                     | type    | meaning            | note |
-|---------------------------|---------|--------------------|------|
-| `domain`                  | str     | URI of current API |      |
-| `id`                      | str     | client ID          |      |
-| `result`                  | dict    | tick               |      |
-| `result.blockNumber`      | int     |                    |      |
-| `result.logIndex`         | int     |                    |      |
-| `result.transactionIndex` | int     |                    |      |
-| `result.transactionHash`  | str     |                    |      |
-| `result.blockTimestamp`   | int     |                    |      |
-| `result.taggedMillis`     | int     |                    |      |
-| `result.lp`               | dict    |                    |      |
-| `result.lp.address`       | str     |                    |      |
-| `result.lp.minLiquidity`  | str     |                    |      |
-| `result.lp.decimals`      | int     |                    |      |
-| `result.lp.factory`       | str     |                    |      |
-| `result.lp.name`          | str     |                    |      |
-| `result.lp.symbol`        | str     |                    |      |
-| `result.token0`           | dict    |                    |      |
-| `result.token0.address`   | str     |                    |      |
-| `result.token0.symbol`    | str     |                    |      |
-| `result.token0.decimals`  | int     |                    |      |
-| `result.token0.name`      | str     |                    |      |
-| `result.token1`           | dict    |                    |      |
-| `result.token1.address`   | str     |                    |      |
-| `result.token1.symbol`    | str     |                    |      |
-| `result.token1.decimals`  | int     |                    |      |
-| `result.token1.name`      | str     |                    |      |
-| `result.reserve0`         | Decimal |                    |      |
-| `result.reserve1`         | Decimal |                    |      |
-| `result.lpAddress`        | str     |                    |      |
+| field                     | type | meaning            | note |
+|---------------------------|------|--------------------|------|
+| `domain`                  | str  | URI of current API |      |
+| `id`                      | str  | client ID          |      |
+| `result`                  | dict | tick               |      |
+| `result.blockNumber`      | int  |                    |      |
+| `result.logIndex`         | int  |                    |      |
+| `result.transactionIndex` | int  |                    |      |
+| `result.transactionHash`  | str  |                    |      |
+| `result.blockTimestamp`   | int  |                    |      |
+| `result.taggedMillis`     | int  |                    |      |
+| `result.lp`               | dict |                    |      |
+| `result.lp.address`       | str  |                    |      |
+| `result.lp.minLiquidity`  | str  |                    |      |
+| `result.lp.decimals`      | int  |                    |      |
+| `result.lp.factory`       | str  |                    |      |
+| `result.lp.name`          | str  |                    |      |
+| `result.lp.symbol`        | str  |                    |      |
+| `result.token0`           | dict |                    |      |
+| `result.token0.address`   | str  |                    |      |
+| `result.token0.symbol`    | str  |                    |      |
+| `result.token0.decimals`  | int  |                    |      |
+| `result.token0.name`      | str  |                    |      |
+| `result.token1`           | dict |                    |      |
+| `result.token1.address`   | str  |                    |      |
+| `result.token1.symbol`    | str  |                    |      |
+| `result.token1.decimals`  | int  |                    |      |
+| `result.token1.name`      | str  |                    |      |
+| `result.reserve0`         | str  |                    |      |
+| `result.reserve1`         | str  |                    |      |
+| `result.lpAddress`        | str  |                    |      |
 
 ### `client.get_tag_lp`
 
