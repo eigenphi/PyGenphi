@@ -237,13 +237,13 @@ class Client(object):
         if from_or_to_address is not None:
             query_params['fromOrToAddress'] = from_or_to_address;
         if block_number_start is not None:
-            query_params['blockNumberStart'] = block_number_start
+            query_params['blockStart'] = block_number_start
         if block_number_end is not None:
-            query_params['blockNumberEnd'] = block_number_end
+            query_params['blockEnd'] = block_number_end
         if block_timestamp_start is not None:
-            query_params['blockTimestampStart'] = block_timestamp_start
+            query_params['startTime'] = block_timestamp_start
         if block_timestamp_end is not None:
-            query_params['blockTimestampEnd'] = block_timestamp_end
+            query_params['endTime'] = block_timestamp_end
         query = ""
         data = json.dumps(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
@@ -267,13 +267,13 @@ class Client(object):
         if lp_address is not None:
             query_params['lpAddress'] = lp_address;
         if block_number_start is not None:
-            query_params['blockNumberStart'] = block_number_start
+            query_params['blockStart'] = block_number_start
         if block_number_end is not None:
-            query_params['blockNumberEnd'] = block_number_end
+            query_params['blockEnd'] = block_number_end
         if block_timestamp_start is not None:
-            query_params['blockTimestampStart'] = block_timestamp_start
+            query_params['startTime'] = block_timestamp_start
         if block_timestamp_end is not None:
-            query_params['blockTimestampEnd'] = block_timestamp_end
+            query_params['endTime'] = block_timestamp_end
         query = ""
         data = json.dumps(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
