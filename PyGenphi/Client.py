@@ -134,7 +134,6 @@ class Client(object):
             elif method == "post":
                 headers["Content-Type"] = "application/json"
                 async with session.post(url, data=data, headers=headers) as resp:
-                    print(resp)
                     return await resp.json()
 
     def get_transaction_by_hash(self,
@@ -210,6 +209,75 @@ class Client(object):
         query = urlencode(query_params)
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         return asyncio.run(self.__request(url))
+
+    def get_transfer(self,
+                     client_id: str = "_",
+                     locator: Locator = Locator.BSC,
+                     token_address: str = None,
+                     from_or_to_address: str = None,
+                     mode: AddressMode = AddressMode.ALL,
+                     columns: list = [],  # TODO NOT support yet
+                     first: bool = False,
+                     block_number_start=None,
+                     block_number_end=None,
+                     block_timestamp_start=None,
+                     block_timestamp_end=None,
+                     page: int = 0,
+                     page_size: int = 1000) -> dict:
+        path = "/v1/dataservice/transfer/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            mode=mode.value,
+                            columns=columns,
+                            first=("true" if first else "false"),
+                            pageNum=page,
+                            pageSize=page_size)
+        if token_address is not None:
+            query_params['tokenAddress'] = token_address;
+        if from_or_to_address is not None:
+            query_params['fromOrToAddress'] = from_or_to_address;
+        if block_number_start is not None:
+            query_params['blockNumberStart'] = block_number_start
+        if block_number_end is not None:
+            query_params['blockNumberEnd'] = block_number_end
+        if block_timestamp_start is not None:
+            query_params['blockTimestampStart'] = block_timestamp_start
+        if block_timestamp_end is not None:
+            query_params['blockTimestampEnd'] = block_timestamp_end
+        query = ""
+        data = json.dumps(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        return asyncio.run(self.__request(url, method="post", data=data))
+
+    def get_swap(self,
+                 client_id: str = "_",
+                 locator: Locator = Locator.BSC,
+                 lp_address: str = None,
+                 block_number_start=None,
+                 block_number_end=None,
+                 block_timestamp_start=None,
+                 block_timestamp_end=None,
+                 page: int = 0,
+                 page_size: int = 1000) -> dict:
+        path = "/v1/dataservice/swap/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            pageNum=page,
+                            pageSize=page_size)
+        if lp_address is not None:
+            query_params['lpAddress'] = lp_address;
+        if block_number_start is not None:
+            query_params['blockNumberStart'] = block_number_start
+        if block_number_end is not None:
+            query_params['blockNumberEnd'] = block_number_end
+        if block_timestamp_start is not None:
+            query_params['blockTimestampStart'] = block_timestamp_start
+        if block_timestamp_end is not None:
+            query_params['blockTimestampEnd'] = block_timestamp_end
+        query = ""
+        data = json.dumps(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        return asyncio.run(self.__request(url, method="post", data=data))
 
     def get_transactions_by_block_number(self,
                                          block_number: int,

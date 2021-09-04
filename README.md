@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.8.0
+pipenv install PyGenphi==0.9.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.8.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.8.0
+Note: run command `pipenv install PyGenphi==0.9.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.9.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -250,18 +250,25 @@ IMPORTANT NOTE: for PyGenphi 0.8.0+, value of all **amount** related field no lo
 
 ##### lp
 
-| field    | type | meaning                          | note |
-|----------|------|----------------------------------|------|
-| `token0` | str  | address of token0 of liquid pair |      |
-| `token1` | str  | address of token1 of liquid pair |      |
-| `symbol` | str  | symbol of liquid pair            |      |
+| field          | type | meaning                           | note |
+|----------------|------|-----------------------------------|------|
+| `address`      | str  | address of liquid pair            |      |
+| `minLiquidity` | str  | min liquidity of liquid pair      |      |
+| `decimals`     | int  | decimal of liquid pair            |      |
+| `factory`      | str  | address of factory of liquid pair |      |
+| `name`         | str  | name of liquid pair               |      |
+| `symbol`       | str  | symbol of liquid pair             |      |
+| `token0`       | str  | address of token0 of liquid pair  |      |
+| `token1`       | str  | address of token1 of liquid pair  |      |
 
 ##### token
 
-| field      | type | meaning            | note |
-|------------|------|--------------------|------|
-| `symbol`   | str  | symbol of token0   |      |
-| `decimals` | int  | decimals of token0 |      |
+| field      | type | example                                        | meaning           | note |
+|------------|------|------------------------------------------------|-------------------|------|
+| `address`  | str  | `"0xe9e7cea3dedca5984780bafc599bd69add087d56"` | "0x..."           |      |
+| `symbol`   | str  | `"BUSD"`                                       | symbol of token   |      |
+| `decimals` | int  | `18`                                           | decimals of token |      |
+| `name`     | str  | `"BUSD Token "`                                | name of token     |      |
 
 ### `client.get_transaction_by_hash`
 
@@ -401,6 +408,122 @@ if __name__ == '__main__':
 | `id`        | str  | client ID          |                                                       |
 | `result`    | list | event log list     |                                                       |
 | `result[n]` | dict | event log          | see `event log` in [common response data structure][] |
+
+### `client.get_transfer`
+
+Note: parameter `api_key` of `Client` is required for this API
+
+#### demon
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client(api_key="<your-api-key>")
+    result = client.get_transfer(token_address="0xe9e7cea3dedca5984780bafc599bd69add087d56", first=True)
+    print(result)
+```
+
+#### params
+
+### query parameters
+
+| param                   | type          | required | default           | note                                               |
+|-------------------------|---------------|----------|-------------------|----------------------------------------------------|
+| `client_id`             | `str`         | ×        | `_`               |                                                    |
+| `locator`               | `Locator`     | ×        | `Locator.BSC`     | block chain                                        |
+| `token_address`         | `str`         | √        |                   |                                                    |
+| `from_or_to_address`    | `str`         | √        |                   |                                                    |
+| `mode`                  | `AddressMode` | ×        | `AddressMode.ALL` | other values: `AddressMode.FROM`, `AddressMode.TO` |
+| `first`                 | `bool`        | ×        | `False`           |                                                    |
+| `block_number_start`    | `int`         | ×        | `None`            |                                                    |
+| `block_number_end`      | `int`         | ×        | `None`            |                                                    |
+| `block_timestamp_start` | `int`         | ×        | `None`            |                                                    |
+| `block_timestamp_end`   | `int`         | ×        | `None`            |                                                    |
+| `page`                  | `int`         | ×        | `0`               |                                                    |
+| `page_size`             | `int`         | ×        | `1000`            | range: [1, 1000]                                   |
+
+#### result
+
+| field                        | type   | meaning                                           | note |
+|------------------------------|--------|---------------------------------------------------|------|
+| `domain`                     | `str`  | URI of current API                                |      |
+| `id`                         | `str`  | client ID                                         |      |
+| `result`                     | `list` | transfer event log list                           |      |
+| `result[n]`                  | `dict` | transfer event log                                |      |
+| `result[n].category`         | `str`  |                                                   |      |
+| `result[n].chain`            | `str`  |                                                   |      |
+| `result[n].transactionHash`  | `str`  |                                                   |      |
+| `result[n].transactionIndex` | `int`  |                                                   |      |
+| `result[n].blockNumber`      | `int`  |                                                   |      |
+| `result[n].blockHash`        | `str`  |                                                   |      |
+| `result[n].blockTimestamp`   | `int`  |                                                   |      |
+| `result[n].logIndex`         | `int`  |                                                   |      |
+| `result[n].tokenAddress`     | `str`  |                                                   |      |
+| `result[n].token`            | `dict` | see `token` in [common response data structure][] |      |
+| `result[n].senderAddress`    | `str`  |                                                   |      |
+| `result[n].receiverAddress`  | `str`  |                                                   |      |
+| `result[n].tokenAmount`      | `str`  |                                                   |      |
+
+### `client.get_swap`
+
+Note: parameter `api_key` of `Client` is required for this API
+
+#### demon
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client(api_key="<your-api-key>")
+    result = client.get_swap(lp_address="0x7d3343bb04d897e928856eb287d2e8e1410ee333", block_number_start=10282384, block_number_end=10282384)
+    print(result)
+```
+
+#### params
+
+### query parameters
+
+| param                   | type          | required | default           | note                                               |
+|-------------------------|---------------|----------|-------------------|----------------------------------------------------|
+| `client_id`             | `str`         | ×        | `_`               |                                                    |
+| `locator`               | `Locator`     | ×        | `Locator.BSC`     | block chain                                        |
+| `lp_address`            | `str`         | √        |                   |                                                    |
+| `block_number_start`    | `int`         | ×        | `None`            |                                                    |
+| `block_number_end`      | `int`         | ×        | `None`            |                                                    |
+| `block_timestamp_start` | `int`         | ×        | `None`            |                                                    |
+| `block_timestamp_end`   | `int`         | ×        | `None`            |                                                    |
+| `page`                  | `int`         | ×        | `0`               |                                                    |
+| `page_size`             | `int`         | ×        | `1000`            | range: [1, 1000]                                   |
+
+#### result
+
+| field                        | type   | meaning                                           | note |
+|------------------------------|--------|---------------------------------------------------|------|
+| `domain`                     | str    | URI of current API                                |      |
+| `id`                         | str    | client ID                                         |      |
+| `result`                     | list   | swap event log list                               |      |
+| `result[n]`                  | dict   | swap event log                                    |      |
+| `result[n].category`         | str    |                                                   |      |
+| `result[n].chain`            | str    |                                                   |      |
+| `result[n].transactionHash`  | str    |                                                   |      |
+| `result[n].transactionIndex` | int    |                                                   |      |
+| `result[n].blockNumber`      | int    |                                                   |      |
+| `result[n].blockHash`        | str    |                                                   |      |
+| `result[n].blockTimestamp`   | int    |                                                   |      |
+| `result[n].logIndex`         | int    |                                                   |      |
+| `result[n].lpAddress`        | str    |                                                   |      |
+| `result[n].lp`               | object | see `lp` in [common response data structure][]    |      |
+| `result[n].token0`           | object | see `token` in [common response data structure][] |      |
+| `result[n].token1`           | object | see `token` in [common response data structure][] |      |
+| `result[n].fromAddress`      | str    |                                                   |      |
+| `result[n].toAddress`        | str    |                                                   |      |
+| `result[n].amount0In`        | str    | input amount of token0                            |      |
+| `result[n].amount1In`        | str    | input amount of token1                            |      |
+| `result[n].amount0Out`       | str    | output amount of token0                           |      |
+| `result[n].amount1Out`       | str    | output amount of token1                           |      |
 
 ### `client.get_tick`
 
