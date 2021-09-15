@@ -14,10 +14,10 @@ pipenv install --dev
 # activate venv
 pipenv shell
 # install PyGenphi
-pipenv install PyGenphi==0.9.2
+pipenv install PyGenphi==0.10.0
 ```
 
-Note: run command `pipenv install PyGenphi==0.9.2` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.9.2
+Note: run command `pipenv install PyGenphi==0.10.0` within existing `PyGenphiDemo` directory with lower version of PyGenphi will auto upgrade PyGenphi to v0.10.0
 
 ### IMPORTANT NOTE FOR IPython(Jupter/anaconda3) users:
 
@@ -653,6 +653,44 @@ if __name__ == '__main__':
 | `result.reserve0`         | str  |                    |      |
 | `result.reserve1`         | str  |                    |      |
 | `result.lpAddress`        | str  |                    |      |
+
+### `client.get_factory`
+
+```python
+from PyGenphi import *
+
+if __name__ == '__main__':
+
+    client = Client()
+    result = client.get_factory()
+    print(result)
+```
+
+#### params
+
+| param           | type      | required | default       | note             |
+|-----------------|-----------|----------|---------------|------------------|
+| `client_id`     | `str`     | ×        | `_`           |                  |
+| `locator`       | `Locator` | ×        | `Locator.BSC` | block chain      |
+| `exchange_name` | `str`     | ×        |               |                  |
+| `page`          | `int`     | ×        | `0`           |                  |
+| `page_size`     | `int`     | ×        | `1000`        | range: [1, 1000] |
+
+
+#### result
+
+| field                      | type | meaning            | note |
+|----------------------------|------|--------------------|------|
+| `domain`                   | str  | URI of current API |      |
+| `id`                       | str  | client ID          |      |
+| `result`                   | list | factory list       |      |
+| `result[n]`                | dict | factory info       |      |
+| `result[n].chain`          | str  |                    |      |
+| `result[n].exchangeName`   | str  |                    |      |
+| `result[n].factoryAddress` | str  |                    |      |
+| `result[n].startDate`      | int  |                    |      |
+| `result[n].endDate`        | int  |                    |      |
+| `result[n].isOpenSourced`  | bool |                    |      |
 
 ### `client.get_tag_lp`
 

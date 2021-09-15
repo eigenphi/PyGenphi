@@ -348,6 +348,23 @@ class Client(object):
         url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
         return asyncio.run(self.__request(url, method="post", data=data))
 
+    def get_factory(self,
+                    exchange_name: str = None,
+                    locator: Locator = Locator.BSC,
+                    client_id: str = "_",
+                    page: int = 0,
+                    page_size: int = 100) -> dict:
+        path = "/v1/dataservice/factory/"
+        query_params = dict(id=client_id,
+                            chain=locator.value,
+                            pageNum=page,
+                            pageSize=page_size)
+        if exchange_name is not None:
+            query_params['exchangeName'] = exchange_name
+        query = urlencode(query_params)
+        url = urlunsplit((self.scheme, self.host + ":" + str(self.port), path, query, ""))
+        return asyncio.run(self.__request(url))
+
     def get_tag_lp(self,
                    lp_address: str = None,
                    is_secure: bool = None,
